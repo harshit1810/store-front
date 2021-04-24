@@ -46,3 +46,4 @@ testem.log
 Thumbs.db
 
 **/target
+demo/src/main/resources/application-local.properties

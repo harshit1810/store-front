@@ -4,14 +4,18 @@ on:
   push:
     branches:
       - stage
-      - feature/store-backend
+      - 'feature/**'
+      - 'fix/stage/**'
   pull_request:
     branches:
       - stage
+      - 'feature/**'
+      - 'fix/stage/**'
   workflow_dispatch:
 
 jobs:
   front-end-build:
+    environment: stage
     runs-on: ubuntu-latest
     steps:
       - name: About
@@ -28,7 +32,12 @@ jobs:
           npm ci
           npm run-script test
         working-directory: ./store-ui
+      - name: Build app
+        if: ${{ success() }}
+        run: npm run-script build
+        working-directory: ./store-ui
   back-end-deploy-products-service:
+    environment: stage
     runs-on: ubuntu-latest
     steps:
       - name: Check var

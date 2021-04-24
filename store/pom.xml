@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.store</groupId>
-	<artifactId>store</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>store</name>
-	<description>Store project</description>
+	<artifactId>products-service</artifactId>
+	<version>1.0.0</version>
+	<name>products-service</name>
+	<description>Product microservice</description>
 	<properties>
 		<java.version>8</java.version>
 		<spring-native.version>0.9.2</spring-native.version>

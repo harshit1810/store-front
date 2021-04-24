@@ -4,13 +4,14 @@ on:
   push:
     branches:
       - stage
+      - feature/store-backend
   pull_request:
     branches:
       - stage
   workflow_dispatch:
 
 jobs:
-  build:
+  front-end-build:
     runs-on: ubuntu-latest
     steps:
       - name: About
@@ -27,3 +28,16 @@ jobs:
           npm ci
           npm run-script test
         working-directory: ./store-ui
+  back-end-deploy-products-service:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check var
+        run: echo ${{secrets.HEROKU_API_KEY}}
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{secrets.PRODUCTS_SERVICE_HEROKU_APP_NAME}}
+          heroku_email: ${{secrets.HEROKU_ACC_EMAIL}}
+          appdir: store

@@ -1,0 +1,29 @@
+name: default-stage-workflow
+
+on:
+  push:
+    branches:
+      - stage
+  pull_request:
+    branches:
+      - stage
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: About
+        if: ${{ github.event_name == 'push' }}
+        run: echo Pushed to stage branch
+      - name: Checkout  
+        uses: actions/checkout@v2
+      - name: Setup NodeJS
+        uses: actions/setup-node@v1
+      - name: Check nodejs version
+        run: node -v
+      - name: Clean install dependencies and test
+        run: |
+          npm ci
+          npm run-script test
+        working-directory: ./store-ui

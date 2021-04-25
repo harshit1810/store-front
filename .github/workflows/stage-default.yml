@@ -40,7 +40,6 @@ jobs:
     environment: stage
     runs-on: ubuntu-latest
     steps:
-        run: echo $APP_NAME
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install JDK

@@ -48,11 +48,10 @@ jobs:
           java-version: '8'
       - name: Check java home
         run: echo $JAVA_HOME
-      - name: Install maven
-        run: wget https://www-us.apache.org/dist/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz -P /maven
+      # - name: Install maven
+      #   run: wget https://www-us.apache.org/dist/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz -P /maven
       - name: check maven
-        run: ls-lh
-        working-directory: ./maven
+        run: mvn -version
       - uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}

@@ -7,16 +7,16 @@ package bean;
  * @author hsriv
  *
  */
-public class Attribute extends BaseEntity {
+public class ProductType extends BaseEntity {
 
 	/**
 	 * 
 	 */
-	public Attribute() {
+	public ProductType() {
 		// TODO Auto-generated constructor stub
 	}
 
 	private String name;
-	private Object value;
+	private AttributeDefinition[] attributeDefinitions;
 
 }

@@ -40,15 +40,22 @@ jobs:
     environment: stage
     runs-on: ubuntu-latest
     steps:
-      - name: Check var
-        env:
-          APP_NAME: ${{secrets.PRODUCTS_SERVICE_HEROKU_APP_NAME}}
         run: echo $APP_NAME
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Install JDK
+        run: sudo apt-get install oracle-java8-installer
+      - name: Check java home
+        run: echo $JAVA_HOME
+      - name: Install maven
+        run: wget https://www-us.apache.org/dist/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz -P /maven
+      - name: check maven
+        run: ls-lh
+        working-directory: ./maven
       - uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{secrets.PRODUCTS_SERVICE_HEROKU_APP_NAME}}
           heroku_email: ${{secrets.HEROKU_ACC_EMAIL}}
           appdir: store
+        working-directory: ./store

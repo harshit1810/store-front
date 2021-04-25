@@ -52,9 +52,11 @@ jobs:
       #   run: wget https://www-us.apache.org/dist/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz -P /maven
       - name: check maven
         run: mvn -version
-      - uses: akhileshns/heroku-deploy@v3.12.12
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: ${{secrets.PRODUCTS_SERVICE_HEROKU_APP_NAME}}
-          heroku_email: ${{secrets.HEROKU_ACC_EMAIL}}
-          appdir: store
+      - name: Build app
+        run: mvnw -DskipTests clean install
+      # - uses: akhileshns/heroku-deploy@v3.12.12
+      #   with:
+      #     heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+      #     heroku_app_name: ${{secrets.PRODUCTS_SERVICE_HEROKU_APP_NAME}}
+      #     heroku_email: ${{secrets.HEROKU_ACC_EMAIL}}
+      #     appdir: store

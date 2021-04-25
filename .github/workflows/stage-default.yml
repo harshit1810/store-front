@@ -51,13 +51,13 @@ jobs:
       # - name: Install maven
       #   run: wget https://www-us.apache.org/dist/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz -P /maven
       - name: check maven
-        run: mvn -version
-      - name: Build app
-        run: mvn -DskipTests clean install
-        working-directory: ./store
-      # - uses: akhileshns/heroku-deploy@v3.12.12
-      #   with:
-      #     heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-      #     heroku_app_name: ${{secrets.PRODUCTS_SERVICE_HEROKU_APP_NAME}}
-      #     heroku_email: ${{secrets.HEROKU_ACC_EMAIL}}
-      #     appdir: store
+        run: mvn -v
+      # - name: Build app
+      #   run: mvn -e -DskipTests clean dependency:list install
+      #   working-directory: ./store
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{secrets.PRODUCTS_SERVICE_HEROKU_APP_NAME}}
+          heroku_email: ${{secrets.HEROKU_ACC_EMAIL}}
+          appdir: store

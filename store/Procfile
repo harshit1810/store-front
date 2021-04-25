@@ -1,1 +1,1 @@
-web: java -jar target/products-service-1.0.0.jar
+web: java -jar target/products-service-1.0.0.jar -Dserver.port=8080

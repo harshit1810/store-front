@@ -12,6 +12,7 @@
 	<groupId>com.store</groupId>
 	<artifactId>products-service</artifactId>
 	<version>1.0.0</version>
+	<packaging>jar</packaging>
 	<name>products-service</name>
 	<description>Product microservice</description>
 	<properties>
@@ -59,6 +60,16 @@
 			<version>1.18.12</version>
 			<scope>provided</scope>
 		</dependency>
+
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -93,6 +104,12 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>com.heroku.sdk</groupId>
+				<artifactId>heroku-maven-plugin</artifactId>
+				<version>3.0.3</version>
 			</plugin>
 		</plugins>
 	</build>

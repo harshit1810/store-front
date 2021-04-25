@@ -52,6 +52,7 @@ jobs:
       #   run: wget https://www-us.apache.org/dist/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz -P /maven
       - name: check maven
         run: mvn -version
+        working-directory: ./store
       - name: Build app
         run: mvn -DskipTests clean install
       # - uses: akhileshns/heroku-deploy@v3.12.12

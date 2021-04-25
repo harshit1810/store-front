@@ -57,4 +57,3 @@ jobs:
           heroku_app_name: ${{secrets.PRODUCTS_SERVICE_HEROKU_APP_NAME}}
           heroku_email: ${{secrets.HEROKU_ACC_EMAIL}}
           appdir: store
-        working-directory: ./store

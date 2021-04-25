@@ -53,7 +53,7 @@ jobs:
       - name: check maven
         run: mvn -version
       - name: Build app
-        run: mvnw -DskipTests clean install
+        run: mvn -DskipTests clean install
       # - uses: akhileshns/heroku-deploy@v3.12.12
       #   with:
       #     heroku_api_key: ${{secrets.HEROKU_API_KEY}}

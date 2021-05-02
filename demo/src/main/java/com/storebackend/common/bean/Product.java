@@ -7,12 +7,17 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -32,34 +37,37 @@ public class Product implements Serializable {
 	@SequenceGenerator(name = "products_id_sequence_gen", sequenceName = "products_id_sequence", initialValue = 1, allocationSize = 1)
 	private Long id;
 
-	@Column
+	@Column(nullable = false)
 	private int version;
 
-	@Column
+	@Column(unique = true, updatable = false, nullable = false)
 	private String key;
 
-	@Column
+	@Column(nullable = false)
 	private String name;
 
-	@Column
+	@Column(nullable = true)
 	private String description;
 
-	@Column
+	@Column(nullable = false, unique = true)
 	private String slug;
 
-	@Column
+	@Column(nullable = false)
 	private boolean published;
 
+	// TODO: set transient until row mapper
 	@Transient
 	private List<String> keywords;
 
-	@OneToOne
-	private ProductType productType;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(foreignKey = @ForeignKey(name = "product_type"), name = "product_type")
+	private ProductType producttype;
 
 	@JsonIgnore
 	@Transient
 	private List<Category> categories;
 
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 	@Transient
 	private List<ProductVariant> variants;
 
@@ -92,7 +100,7 @@ public class Product implements Serializable {
 	 * @param slug
 	 * @param published
 	 * @param keywords
-	 * @param productType
+	 * @param producttype
 	 * @param categories
 	 * @param variants
 	 * @param createdAt
@@ -101,7 +109,7 @@ public class Product implements Serializable {
 	 * @param lastModifiedBy
 	 */
 	public Product(Long id, int version, String key, String name, String description, String slug, boolean published,
-			List<String> keywords, ProductType productType, List<Category> categories, List<ProductVariant> variants,
+			List<String> keywords, ProductType producttype, List<Category> categories, List<ProductVariant> variants,
 			Date createdAt, Date lastModifiedAt, Long createdBy, Long lastModifiedBy) {
 		super();
 		this.id = id;
@@ -112,7 +120,7 @@ public class Product implements Serializable {
 		this.slug = slug;
 		this.published = published;
 		this.keywords = keywords;
-		this.productType = productType;
+		this.producttype = producttype;
 		this.categories = categories;
 		this.variants = variants;
 		this.createdAt = createdAt;
@@ -234,20 +242,6 @@ public class Product implements Serializable {
 	}
 
 	/**
-	 * @return the productType
-	 */
-	public ProductType getProductType() {
-		return productType;
-	}
-
-	/**
-	 * @param productType the productType to set
-	 */
-	public void setProductType(ProductType productType) {
-		this.productType = productType;
-	}
-
-	/**
 	 * @return the categories
 	 */
 	public List<Category> getCategories() {
@@ -331,11 +325,25 @@ public class Product implements Serializable {
 		this.lastModifiedBy = lastModifiedBy;
 	}
 
+	/**
+	 * @return the producttype
+	 */
+	public ProductType getProducttype() {
+		return producttype;
+	}
+
+	/**
+	 * @param producttype the producttype to set
+	 */
+	public void setProducttype(ProductType producttype) {
+		this.producttype = producttype;
+	}
+
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", version=" + version + ", key=" + key + ", name=" + name + ", description="
 				+ description + ", slug=" + slug + ", published=" + published + ", keywords=" + keywords
-				+ ", productType=" + productType + ", categories=" + categories + ", variants=" + variants
+				+ ", producttype=" + producttype + ", categories=" + categories + ", variants=" + variants
 				+ ", createdAt=" + createdAt + ", lastModifiedAt=" + lastModifiedAt + ", createdBy=" + createdBy
 				+ ", lastModifiedBy=" + lastModifiedBy + "]";
 	}

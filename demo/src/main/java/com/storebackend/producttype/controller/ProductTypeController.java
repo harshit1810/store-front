@@ -80,15 +80,24 @@ public class ProductTypeController {
 	@PostMapping(value = "/")
 	public ResponseEntity<Integer> create(@RequestBody ProductType draft) {
 		System.out.println("Product type draft = " + draft);
+
+		ProductType saved = null;
 		// save product type
-		ProductType saved = productTypeJpa.save(
-				new ProductType(null, draft.getKey(), 1, new Date(), null, "platform", null, draft.getName(), null));
+		try {
+			saved = productTypeJpa.save(
+					new ProductType(null, draft.getKey(), 1, new Date(), null, 1L, 1L, draft.getName(), null, null));
+		} catch (Exception e) {
+			System.out.println("Failed to create the product type");
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
 		// set product type id in attribute definitions
 		List<AttributeDefinition> updatedDefs = new ArrayList<AttributeDefinition>();
 		for (AttributeDefinition def : draft.getAttributeDefinitions()) {
-			def.setProducttype(saved);
-			updatedDefs.add(def);
+			updatedDefs.add(new AttributeDefinition(null, def.getName(), def.getType(), def.isRequired(),
+					def.isSearchable(), def.isSortable(), def.isFacetable(), saved));
 		}
+
 		// save attribute definitions
 		attributeDefinitionJpa.saveAll(updatedDefs);
 		return new ResponseEntity<Integer>(HttpStatus.CREATED);

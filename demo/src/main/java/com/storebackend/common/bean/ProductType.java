@@ -51,10 +51,10 @@ public class ProductType implements Serializable {
 	private Date lastModifiedAt;
 
 	@Column(name = "created_by", nullable = false)
-	private String createdBy;
+	private Long createdBy;
 
 	@Column(name = "last_modified_by")
-	private String lastModifiedBy;
+	private Long lastModifiedBy;
 
 	@Column(nullable = false)
 	private String name;
@@ -63,6 +63,11 @@ public class ProductType implements Serializable {
 	@JsonIgnore
 	@Transient
 	private List<AttributeDefinition> attributeDefinitions;
+
+	@OneToMany(mappedBy = "producttype", cascade = CascadeType.ALL)
+	@JsonIgnore
+	@Transient
+	private Product product;
 
 	/**
 	 * 
@@ -82,9 +87,10 @@ public class ProductType implements Serializable {
 	 * @param lastModifiedBy
 	 * @param name
 	 * @param attributeDefinitions
+	 * @param product
 	 */
-	public ProductType(Long id, String key, int version, Date createdAt, Date lastModifiedAt, String createdBy,
-			String lastModifiedBy, String name, List<AttributeDefinition> attributeDefinitions) {
+	public ProductType(Long id, String key, int version, Date createdAt, Date lastModifiedAt, Long createdBy,
+			Long lastModifiedBy, String name, List<AttributeDefinition> attributeDefinitions, Product product) {
 		super();
 		this.id = id;
 		this.key = key;
@@ -95,6 +101,7 @@ public class ProductType implements Serializable {
 		this.lastModifiedBy = lastModifiedBy;
 		this.name = name;
 		this.attributeDefinitions = attributeDefinitions;
+		this.product = product;
 	}
 
 	/**
@@ -170,28 +177,28 @@ public class ProductType implements Serializable {
 	/**
 	 * @return the createdBy
 	 */
-	public String getCreatedBy() {
+	public Long getCreatedBy() {
 		return createdBy;
 	}
 
 	/**
 	 * @param createdBy the createdBy to set
 	 */
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(Long createdBy) {
 		this.createdBy = createdBy;
 	}
 
 	/**
 	 * @return the lastModifiedBy
 	 */
-	public String getLastModifiedBy() {
+	public Long getLastModifiedBy() {
 		return lastModifiedBy;
 	}
 
 	/**
 	 * @param lastModifiedBy the lastModifiedBy to set
 	 */
-	public void setLastModifiedBy(String lastModifiedBy) {
+	public void setLastModifiedBy(Long lastModifiedBy) {
 		this.lastModifiedBy = lastModifiedBy;
 	}
 
@@ -223,11 +230,33 @@ public class ProductType implements Serializable {
 		this.attributeDefinitions = attributeDefinitions;
 	}
 
+	/**
+	 * @return the product
+	 */
+	public Product getProduct() {
+		return product;
+	}
+
+	/**
+	 * @param product the product to set
+	 */
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	/**
+	 * @return the serialversionuid
+	 */
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
 	@Override
 	public String toString() {
 		return "ProductType [id=" + id + ", key=" + key + ", version=" + version + ", createdAt=" + createdAt
 				+ ", lastModifiedAt=" + lastModifiedAt + ", createdBy=" + createdBy + ", lastModifiedBy="
-				+ lastModifiedBy + ", name=" + name + ", attributeDefinitions=" + attributeDefinitions + "]";
+				+ lastModifiedBy + ", name=" + name + ", attributeDefinitions=" + attributeDefinitions + ", product="
+				+ product + "]";
 	}
 
 }

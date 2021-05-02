@@ -6,9 +6,15 @@ package com.storebackend.common.bean;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -31,14 +37,20 @@ public class ProductVariant implements Serializable {
 	@Column(name = "variant_id")
 	private int variantId;
 
+	// TODO: set as transient until row mapper
 	@Transient
 	private List<String> images;
 
 	@Column(name = "is_master")
 	private boolean isMaster;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(foreignKey = @ForeignKey(name = "product_id"), name = "product_id")
+	private Product product;
+
+	@OneToMany(mappedBy = "productvariant", cascade = CascadeType.ALL)
 	@Transient
-	private List<Attribute> attributes;
+	private List<ProductVariantAttribute> productVariantAttributes;
 
 	@Transient
 	private List<Price> prices;
@@ -56,17 +68,19 @@ public class ProductVariant implements Serializable {
 	 * @param variantId
 	 * @param images
 	 * @param isMaster
-	 * @param attributes
+	 * @param product
+	 * @param productVariantAttributes
 	 * @param prices
 	 */
-	public ProductVariant(int sku, int variantId, List<String> images, boolean isMaster, List<Attribute> attributes,
-			List<Price> prices) {
+	public ProductVariant(int sku, int variantId, List<String> images, boolean isMaster, Product product,
+			List<ProductVariantAttribute> productVariantAttributes, List<Price> prices) {
 		super();
 		this.sku = sku;
 		this.variantId = variantId;
 		this.images = images;
 		this.isMaster = isMaster;
-		this.attributes = attributes;
+		this.product = product;
+		this.productVariantAttributes = productVariantAttributes;
 		this.prices = prices;
 	}
 
@@ -129,15 +143,15 @@ public class ProductVariant implements Serializable {
 	/**
 	 * @return the attributes
 	 */
-	public List<Attribute> getAttributes() {
-		return attributes;
+	public List<ProductVariantAttribute> getAttributes() {
+		return productVariantAttributes;
 	}
 
 	/**
-	 * @param attributes the attributes to set
+	 * @param productVariantAttributes the attributes to set
 	 */
-	public void setAttributes(List<Attribute> attributes) {
-		this.attributes = attributes;
+	public void setAttributes(List<ProductVariantAttribute> productVariantAttributes) {
+		this.productVariantAttributes = productVariantAttributes;
 	}
 
 	/**
@@ -155,16 +169,38 @@ public class ProductVariant implements Serializable {
 	}
 
 	/**
-	 * @return the serialversionuid
+	 * @return the product
 	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public Product getProduct() {
+		return product;
+	}
+
+	/**
+	 * @param product the product to set
+	 */
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	/**
+	 * @return the productVariantAttributes
+	 */
+	public List<ProductVariantAttribute> getProductVariantAttributes() {
+		return productVariantAttributes;
+	}
+
+	/**
+	 * @param productVariantAttributes the productVariantAttributes to set
+	 */
+	public void setProductVariantAttributes(List<ProductVariantAttribute> productVariantAttributes) {
+		this.productVariantAttributes = productVariantAttributes;
 	}
 
 	@Override
 	public String toString() {
 		return "ProductVariant [sku=" + sku + ", variantId=" + variantId + ", images=" + images + ", isMaster="
-				+ isMaster + ", attributes=" + attributes + ", prices=" + prices + "]";
+				+ isMaster + ", product=" + product + ", productVariantAttributes=" + productVariantAttributes
+				+ ", prices=" + prices + "]";
 	}
 
 }

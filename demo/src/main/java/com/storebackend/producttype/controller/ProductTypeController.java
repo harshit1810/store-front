@@ -77,7 +77,7 @@ public class ProductTypeController {
 		return results;
 	}
 
-	@PostMapping(value = "/", produces = "application/json")
+	@PostMapping(value = "/")
 	public ResponseEntity<Integer> create(@RequestBody ProductType draft) {
 		System.out.println("Product type draft = " + draft);
 		// save product type
@@ -91,6 +91,6 @@ public class ProductTypeController {
 		}
 		// save attribute definitions
 		attributeDefinitionJpa.saveAll(updatedDefs);
-		return new ResponseEntity<Integer>(HttpStatus.OK);
+		return new ResponseEntity<Integer>(HttpStatus.CREATED);
 	}
 }

@@ -1,0 +1,7 @@
+<p-card styleClass="p-card-shadow" (click)="clickHandler()">
+    <ng-template pTemplate="content">
+        <img [src]="product.image" />
+        <p>{{product.name}}</p>
+        <p>{{product.price.amount}}</p>
+    </ng-template>
+</p-card>

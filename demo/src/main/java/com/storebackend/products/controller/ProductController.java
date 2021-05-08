@@ -4,7 +4,9 @@
 package com.storebackend.products.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,7 +24,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.storebackend.common.bean.Product;
+import com.storebackend.common.bean.ProductType;
+import com.storebackend.common.bean.ProductVariant;
 import com.storebackend.common.jpa.ProductJPA;
+import com.storebackend.common.jpa.ProductTypeJPA;
 import com.storebackend.common.jpa.ProductVariantJPA;
 import com.storebackend.common.util.CommonConstants;
 import com.storebackend.products.util.ProductsConstants;
@@ -35,23 +40,14 @@ import com.storebackend.products.util.ProductsConstants;
 @RequestMapping(value = "/" + CommonConstants.ApiLabel + "/" + ProductsConstants.ApiVersion + "/products")
 public class ProductController {
 
-	private class PatchPublished {
-		private boolean published;
-
-		/**
-		 * @return the published
-		 */
-		public boolean isPublished() {
-			return published;
-		}
-
-	}
-
 	@Autowired
 	ProductJPA product;
 
 	@Autowired
 	ProductVariantJPA productVariant;
+
+	@Autowired
+	ProductTypeJPA productType;
 
 	/**
 	 * @return the product
@@ -79,6 +75,20 @@ public class ProductController {
 	 */
 	public void setProductVariant(ProductVariantJPA productVariant) {
 		this.productVariant = productVariant;
+	}
+
+	/**
+	 * @return the productType
+	 */
+	public ProductTypeJPA getProductType() {
+		return productType;
+	}
+
+	/**
+	 * @param productType the productType to set
+	 */
+	public void setProductType(ProductTypeJPA productType) {
+		this.productType = productType;
 	}
 
 	/**
@@ -132,6 +142,59 @@ public class ProductController {
 
 	@PostMapping(value = "/", consumes = "application/json")
 	public ResponseEntity<Integer> create(@RequestBody Product draft) {
+		System.out.println("Received product draft " + draft);
+
+		// validate product type
+		try {
+			System.out.println("Validating product type");
+			Optional<ProductType> pType = productType.findById(draft.getProducttype().getId());
+			ProductType foo = pType.get();
+			System.out.println("Product type = " + foo.getKey());
+		} catch (IllegalArgumentException e1) {
+			System.out.println("Product type not provided");
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		} catch (Exception e2) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		// save product
+
+		draft.setVersion(1);
+		draft.setSlug(draft.getName().trim().replaceAll("\\s+", "-"));
+		draft.setCreatedAt(new Date());
+		draft.setCreatedBy(0L);
+
+		Product created = null;
+		try {
+			created = product.save(draft);
+		} catch (Exception e3) {
+			System.out.println("Failed to create product " + draft.getKey());
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		// create product variants with the ref of created product
+		for (ProductVariant pv : draft.getVariants()) {
+			pv.setProduct(created);
+		}
+		try {
+			productVariant.saveAll(draft.getVariants());
+		} catch (Exception e4) {
+			System.out.println("Failed to create variants for product" + created.getId());
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
 		return new ResponseEntity<Integer>(HttpStatus.CREATED);
+	}
+
+	private class PatchPublished {
+		private boolean published;
+
+		/**
+		 * @return the published
+		 */
+		public boolean isPublished() {
+			return published;
+		}
+
 	}
 }

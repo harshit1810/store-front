@@ -3,16 +3,15 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --watch --live-reload --open",
-    "start-prod": "ng serve --open",
-    "build": "ng build --output-path ../docs/stage",
-    "build-prod": "ng build --prod --output-path ../docs/",
     "test": "ng test",
     "lint": "ng lint",
     "lint-fix": "ng lint --fix",
     "e2e": "ng e2e",
-    "build-pages": "npm run-script build && npm run-script build-prod",
-    "precommit": "npm run-script lint && npm run-script build-pages"
+    "build": "npm run lint-fix && ng build --configuration=local --output-path ../docs/stage",
+    "build-prod": "npm run-lint && ng build --configuration=production --prod --output-path ../docs/",
+    "start": "ng serve --configuration=local --watch --open",
+    "start-prod": "ng serve --configuration=production --open",
+    "build-pages": "npm run-script build && npm run-script build-prod"
   },
   "private": true,
   "dependencies": {
@@ -26,7 +25,7 @@
     "@angular/router": "~11.2.11",
     "primeicons": "^4.1.0",
     "primeng": "^11.4.0",
-    "rxjs": "~6.6.0",
+    "rxjs": "6.6.7",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.3"
   },

@@ -8,6 +8,7 @@ import { ProductDisplayCardComponent } from './product-display-card/product-disp
 import { ProductListingComponent } from './product-listing/product-listing.component';
 import { HttpService } from './services/http.service';
 import { ProductSearchService } from './services/product-search.service';
+import { CustomerService } from './services/customer.service';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
@@ -24,7 +25,8 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     ],
     providers: [
         HttpService,
-        ProductSearchService
+        ProductSearchService,
+        CustomerService
     ],
     exports: [
         CommonModule,

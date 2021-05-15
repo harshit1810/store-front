@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { LoginPageComponent } from './login-page/login-page.component';
@@ -10,6 +10,7 @@ import { LoginRoutingModule } from './login-routing.module'
   imports: [
     CommonModule,
     LoginRoutingModule
-  ]
+  ],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class LoginModule { }

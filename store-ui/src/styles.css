@@ -1,1 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
+.header{
+    border: 1px solid red;
+    width: 100%;
+    height: 10%;
+    position: fixed;
+}
+
+body{
+    border: 1px solid black;
+    width: 100%;
+    height: 99%;
+    position: absolute;
+}

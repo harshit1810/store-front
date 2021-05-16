@@ -1,3 +1,4 @@
+require('dotenv').config();
 process.on('exit', () => {
 	console.info('Exiting the process');
 });

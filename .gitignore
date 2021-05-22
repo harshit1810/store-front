@@ -1,3 +1,6 @@
 .vscode/
 node_modules/
 .env*
+logs/**
+!logs/logs.log
+.DS_Store

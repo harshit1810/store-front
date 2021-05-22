@@ -1,7 +1,22 @@
-const searchPlugin = require('../plugins/search-engine');
-module.exports = function () {
-	const plugin = searchPlugin();
-	const client = plugin.get();
+const {
+	isNonEmptyString 
+} = require('../helpers/util');
+/**
+ * 
+ * @param {Object} config 
+ * @param {{}} config.client 
+ * @param {{}} config.logger 
+ * @returns 
+ */
+module.exports = function (config) {
+
+	const isClientConnected = () => {
+		if (config.client.isConnected) {
+			return;
+		}
+		throw new Error('Not connected to search engine');
+	};
+
 
 	/**
      * 
@@ -13,22 +28,28 @@ module.exports = function () {
      * @throws if search fails
      */
 	const search = async data => {
+		isClientConnected();
 		const {
 			page = 1,
 			size = 20,
 			query: q
 		} = data;
 		try {
-			const res = await client.search({
-				index: plugin.index,
-				// type: plugin.documentType,
+			const res = await config.client.search({
+				index: config.client.index,
+				type: config.client.documentType,
 				from: (page - 1) * size,
 				size,
-				q
+				...(isNonEmptyString(q)
+					? {
+						q 
+					}
+					: {
+					})
 			});
 			return res && res.hits;
 		} catch (e) {
-			console.error('Failed to search for products: ' + JSON.stringify(e));
+			config.logger.error('Failed to search for products: ' + JSON.stringify(e));
 			throw e;
 		}
 	};
@@ -39,9 +60,10 @@ module.exports = function () {
      * @param {{[property: string]: any}} data.filters 
      */
 	const count = async data => {
+		isClientConnected();
 		try {
-			const res = await client.count({
-				index: plugin.index,
+			const res = await config.client.count({
+				index: config.client.index,
 				...(Object.keys(data.filters).length > 0
 					? {
 						body: {
@@ -61,7 +83,7 @@ module.exports = function () {
 			});
 			return res && res.count;
 		} catch(error) {
-			console.error('Failed to get count: ' + JSON.stringify(error));
+			config.logger.error('Failed to get count: ' + JSON.stringify(error));
 			throw error;
 		}
 	};

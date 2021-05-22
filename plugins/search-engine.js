@@ -1,33 +1,40 @@
 const elasticsearch = require('elasticsearch');
 
-let client;
+module.exports = function ({
+	isProduction,
+	logger 
+}) {
+	const index = process.env.SEARCH_INDEX_NAME;
+	const documentType = 'products';
 
-function createClient() {
-	client = new elasticsearch.Client({
+	logger.debug('Connecting to elasticsearch...');
+
+	const client = new elasticsearch.Client({
 		host: process.env.BONSAI_URL,
 		log: [{
 			type: 'stdio',
-			levels: ['error', 'warning']
+			levels: isProduction
+				? ['error', 'warning']
+				: ['trace']
 		}],
 		apiVersion: '7.4'
 	});
 
 	client.ping({
 		requestTimeout: 30000,
-	}, console.error.bind(console));
-}
-
-module.exports = function () {
-	const index = process.env.SEARCH_INDEX_NAME;
-	const documentType = 'products';
-	return {
-		index,
-		documentType,
-		get: () => {
-			if (typeof client === 'undefined') {
-				createClient();
-			}
-			return client;
+	}, error => {
+		if (error) {
+			logger.error(
+				'Failed to connect to elastic search ' 
+				+ JSON.stringify(error)
+			);
+		} else {
+			client.isConnected = true;
+			client.index = index;
+			client.documentType = documentType;
+			logger.info('Success: Elasticsearch connection');
 		}
-	};
+	});
+
+	return client;
 };

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const {
 	// eslint-disable-next-line no-unused-vars
 	IncomingMessage, ServerResponse 
@@ -5,11 +6,23 @@ const {
 const {
 	SearchApiPath 
 } = require('../helpers/constants');
-const SearchEngine = require('./elasticsearch');
+const {
+	isNonEmptyArray 
+} = require('../helpers/util');
 const Event = require('../plugins/event-handler');
-/* eslint-disable no-unused-vars */
-module.exports = function() {
-	const bonsai = SearchEngine();
+/**
+ * 
+ * @param {Object} config
+ * @param {boolean} config.isProduction
+ * @param {{}} config.logger
+ * @param {{}} config.searchService
+ * @returns 
+ */
+module.exports = function(config) {
+	const {
+		searchService,
+		logger
+	} = config;
 	const events = Event();
 
 	/**
@@ -23,7 +36,7 @@ module.exports = function() {
 		const res = {
 		};
 		try {
-			res.responseBody = await bonsai.search({
+			res.responseBody = await searchService.search({
 				query: ''
 			});
 			res.responseBody;
@@ -45,7 +58,7 @@ module.exports = function() {
 		 */
 		const res = {
 		};
-		const count = await bonsai.count();
+		const count = await searchService.count();
 		return Object.assign(res, {
 			count 
 		});
@@ -55,11 +68,15 @@ module.exports = function() {
 		{
 			method: 'get',
 			subPath: '',
+			validators: [],
+			sanitizers: [],
 			handler: basicSearch
 		},
 		{
 			method: 'get',
 			subPath: 'count',
+			validators: [],
+			sanitizers: [],
 			handler: getCount
 		}
 	];
@@ -75,23 +92,52 @@ module.exports = function() {
 		const [, ...parts] = endpointPath.split('/');
 		const subPath = parts[0] || '';
 
-		
-
 		const matchingSetting = mappings.find(_map => {
 			return _map.method === method && _map.subPath === subPath;
 		});
 
-		if (!matchingSetting) {
+		const reply = obj => {
 			return events.sendResponse({
+				...obj,
+				res
+			});
+		};
+
+		// throw 'Not Implemented' error if the endpoint is not mapped to a function
+		if (!matchingSetting) {
+			logger.warn('Endpoint is not mapped');
+			return reply({
 				isError: true,
 				status: 501
 			});
 		}
+
+		// invoke validators
+		if (isNonEmptyArray(matchingSetting.validators)) {
+			for (let i=0;i<matchingSetting.validators.length; i++) {
+				const fn = matchingSetting.validators[i];
+				if (typeof fn !== 'function') {
+					continue;
+				}
+				try {
+					await fn(req);
+				} catch(obj) {
+					logger.error('Error occured during validation');
+					return reply(obj);
+				}
+			}
+		}
+
+		// invoke sanitizers
+		if (isNonEmptyArray(matchingSetting.sanitizers)) {
+			matchingSetting.sanitizers.forEach(fn => {
+				return fn(req);
+			});
+		}
+
+		// invoke handler function
 		const response = await matchingSetting.handler(req, res);
-		events.sendResponse({
-			...response,
-			res
-		});
+		reply(response);
 	};
 
 	return wrapper;

@@ -23,5 +23,5 @@ jobs:
         run: |
           npm ci
           npm audit
-      - name: linting
-        run: npm run-script lint
+      - name: test
+        run: npm run-script test

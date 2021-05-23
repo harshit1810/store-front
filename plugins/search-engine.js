@@ -2,7 +2,8 @@ const elasticsearch = require('elasticsearch');
 
 module.exports = function ({
 	isProduction,
-	logger 
+	logger,
+	requestTimeout = 3000 
 }) {
 	const index = process.env.SEARCH_INDEX_NAME;
 	const documentType = 'products';
@@ -21,9 +22,10 @@ module.exports = function ({
 	});
 
 	client.ping({
-		requestTimeout: 30000,
+		requestTimeout,
 	}, error => {
 		if (error) {
+			client.isConnected = false;
 			logger.error(
 				'Failed to connect to elastic search ' 
 				+ JSON.stringify(error)

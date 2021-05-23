@@ -37,4 +37,5 @@ rules:
   object-curly-newline:
     - error
     - always
-
+  object-property-newline:
+    - warn

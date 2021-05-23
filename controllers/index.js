@@ -1,6 +1,6 @@
 const SearchController = require('./search'),
 	SuggestController = require('./suggest'),
-	ElasticsearchService = require('../service/elasticsearch');
+	ElasticsearchService = require('../service/es');
 
 /**
  * 

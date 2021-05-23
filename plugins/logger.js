@@ -13,7 +13,14 @@ module.exports = function({
 	const path = PATH.join(__dirname, '..', 'logs', logFileName);
 
 	// remove existing log file
-	FS.rmSync(path);
+	try {
+		FS.rmSync(path);
+	} catch(e) {
+		if (e.code === 'ENOENT') {
+			// log file did not exist
+		}
+		logger.error(JSON.stringify(e));
+	}
 
 	const logger = BUNYAN.createLogger({
 		name: 'search-service',

@@ -1,31 +1,37 @@
-const bunyan = require('bunyan');
-const path = require('path');
+const BUNYAN = require('bunyan');
+const PATH = require('path');
+const FS = require('fs');
 
 module.exports = function({
 	isProduction 
 }) {
+	isProduction = false;
+
 	const logFileName = (isProduction
 		? 'prod'
 		: 'dev') + '.log';
+	const path = PATH.join(__dirname, '..', 'logs', logFileName);
 
-	const logger = bunyan.createLogger({
+	// remove existing log file
+	FS.rmSync(path);
+
+	const logger = BUNYAN.createLogger({
 		name: 'search-service',
 		streams: [
 			...(isProduction
 				? [
 					{
-						level: bunyan.WARN,
-						path: path.join(__dirname, '..', 'logs', logFileName)
+						level: BUNYAN.WARN,
+						path
 					},
 					{
-						level: bunyan.ERROR,
-						path: path.join(__dirname, '..', 'logs', logFileName)
+						level: BUNYAN.ERROR,
+						path
 					}
 				]
 				: [{
-					level: bunyan.DEBUG,
-					// stream: process.stdout 
-                    path: path.join(__dirname, '..', 'logs', logFileName)
+					level: BUNYAN.DEBUG,
+					path
 				}]
 			)
 		],

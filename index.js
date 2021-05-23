@@ -1,4 +1,7 @@
-require('dotenv').config();
+const isProduction = process.env.NODE_ENV === 'production';
+if (!isProduction) {
+	require('dotenv').config();
+}
 process.on('exit', code => {
 	console.error('Exiting the process with code ' + code);
 });
@@ -9,7 +12,6 @@ process.on('unhandledRejection', (error, promise) => {
 process.on('uncaughtException', error  => {
 	console.error('Fatal error ',  error);
 });
-const isProduction = process.env.NODE_ENV === 'production';
 
 const logger = require('./plugins/logger')({
 	isProduction 

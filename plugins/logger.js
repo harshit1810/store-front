@@ -18,8 +18,9 @@ module.exports = function({
 	} catch(e) {
 		if (e.code === 'ENOENT') {
 			// log file did not exist
+		} else {
+			logger.error(JSON.stringify(e));
 		}
-		logger.error(JSON.stringify(e));
 	}
 
 	const logger = BUNYAN.createLogger({

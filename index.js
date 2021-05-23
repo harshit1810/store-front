@@ -23,7 +23,7 @@ const searchClient = require('./plugins/search-engine')({
 });
 
 const Constants = require('./helpers/constants');
-let serverModule = require('http');
+const serverModule = require('http');
 const {
 	searchController, suggestController 
 } = require('./controllers')({
@@ -31,10 +31,6 @@ const {
 	logger,
 	searchClient
 });
-
-// if (isProduction) {
-// 	serverModule = require('https');
-// }
 
 /**
  * 

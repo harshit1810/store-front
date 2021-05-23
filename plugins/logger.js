@@ -7,23 +7,15 @@ const { IncomingMessage } = require('http');
 module.exports = function({
 	isProduction 
 }) {
-	isProduction = false;
-
 	const logFileName = (isProduction
 		? 'prod'
 		: 'dev') + '.log';
 	const path = PATH.join(__dirname, '..', 'logs', logFileName);
 
 	// remove existing log file
-	try {
-		FS.rmSync(path);
-	} catch(e) {
-		if (e.code === 'ENOENT') {
-			// log file did not exist
-		} else {
-			logger.error(JSON.stringify(e));
-		}
-	}
+	FS.rmSync(path, {
+		force: true
+	});
 
 	const logger = BUNYAN.createLogger({
 		name: 'search-service',

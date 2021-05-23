@@ -32,9 +32,9 @@ const {
 	searchClient
 });
 
-if (isProduction) {
-	serverModule = require('https');
-}
+// if (isProduction) {
+// 	serverModule = require('https');
+// }
 
 /**
  * 

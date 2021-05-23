@@ -1,6 +1,8 @@
 const BUNYAN = require('bunyan');
 const PATH = require('path');
 const FS = require('fs');
+// eslint-disable-next-line
+const { IncomingMessage } = require('http');
 
 module.exports = function({
 	isProduction 
@@ -43,6 +45,9 @@ module.exports = function({
 				}]
 			)
 		],
+		serializers: {
+			req: requestSerializer
+		},
 		...(!isProduction
 			? {
 				src: true 
@@ -52,4 +57,25 @@ module.exports = function({
 	});
 
 	return logger;
+
+	/**
+	 * 
+	 * @param {IncomingMessage} req 
+	 */
+	function requestSerializer(req) {
+		return {
+			method: req.method,
+			url: req.url,
+			headers: {
+				agent: req.headers['user-agent'],
+				host: req.headers['host'],
+				...(!isProduction
+					? {
+						auth: req.headers['authorization'] 
+					}
+					: {
+					})
+			}
+		};
+	}
 };

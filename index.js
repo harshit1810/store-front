@@ -36,7 +36,15 @@ if (isProduction) {
 	serverModule = require('https');
 }
 
+/**
+ * 
+ * @param {serverModule.IncomingMessage} req 
+ * @param {serverModule.ServerResponse} res 
+ */
 function requestListener(req, res) {
+	logger.info({
+		req 
+	}, 'Received request');
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
 	if (req.url.startsWith(Constants.SearchApiPath)) {

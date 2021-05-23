@@ -1,5 +1,8 @@
-const bunyan = require('bunyan');
-const path = require('path');
+const BUNYAN = require('bunyan');
+const PATH = require('path');
+const FS = require('fs');
+// eslint-disable-next-line
+const { IncomingMessage } = require('http');
 
 module.exports = function({
 	isProduction 
@@ -7,28 +10,36 @@ module.exports = function({
 	const logFileName = (isProduction
 		? 'prod'
 		: 'dev') + '.log';
+	const path = PATH.join(__dirname, '..', 'logs', logFileName);
 
-	const logger = bunyan.createLogger({
+	// remove existing log file
+	FS.rmSync(path, {
+		force: true
+	});
+
+	const logger = BUNYAN.createLogger({
 		name: 'search-service',
 		streams: [
 			...(isProduction
 				? [
 					{
-						level: bunyan.WARN,
-						path: path.join(__dirname, '..', 'logs', logFileName)
+						level: BUNYAN.WARN,
+						path
 					},
 					{
-						level: bunyan.ERROR,
-						path: path.join(__dirname, '..', 'logs', logFileName)
+						level: BUNYAN.ERROR,
+						path
 					}
 				]
 				: [{
-					level: bunyan.DEBUG,
-					// stream: process.stdout 
-                    path: path.join(__dirname, '..', 'logs', logFileName)
+					level: BUNYAN.DEBUG,
+					path
 				}]
 			)
 		],
+		serializers: {
+			req: requestSerializer
+		},
 		...(!isProduction
 			? {
 				src: true 
@@ -38,4 +49,25 @@ module.exports = function({
 	});
 
 	return logger;
+
+	/**
+	 * 
+	 * @param {IncomingMessage} req 
+	 */
+	function requestSerializer(req) {
+		return {
+			method: req.method,
+			url: req.url,
+			headers: {
+				agent: req.headers['user-agent'],
+				host: req.headers['host'],
+				...(!isProduction
+					? {
+						auth: req.headers['authorization'] 
+					}
+					: {
+					})
+			}
+		};
+	}
 };

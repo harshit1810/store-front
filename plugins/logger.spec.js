@@ -23,7 +23,7 @@ describe('logger plugin', () => {
 					'src': true,
 					'streams': [{
 						'level': 20,
-						'path': 'D:\\Workspace\\github\\store-front\\logs\\dev.log'
+						'path': expect.any(String)
 					}]
 				});
 			});
@@ -57,10 +57,10 @@ describe('logger plugin', () => {
 						},
 						'streams': [{
 							'level': 40,
-							'path': 'D:\\Workspace\\github\\store-front\\logs\\prod.log'
+							'path': expect.any(String)
 						}, {
 							'level': 50,
-							'path': 'D:\\Workspace\\github\\store-front\\logs\\prod.log'
+							'path': expect.any(String)
 						}]
 					}
 				);

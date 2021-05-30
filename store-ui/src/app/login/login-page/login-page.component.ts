@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import {HttpService} from '../../common/services/http.service'
+import { IGenericResponse } from 'src/app/common/models/generic-response';
+import { HttpService } from '../../common/services/http.service'
+import { ILoginResponse } from 'src/app/common/models/login-response';
 
 @Component({
   selector: 'app-login-page',
@@ -23,10 +25,10 @@ export class LoginPageComponent implements OnInit {
     })
   }
 
-  userLogin(data : any) {    
+  userLogin(data: any) {
     this.http.post('http://localhost:8080/api/customers/v1/login', data).subscribe(
-      data => {
-        console.log(data);
+      (res: IGenericResponse<ILoginResponse>) => {
+        console.log(res.data.token);
       }
     )
   }

@@ -10,13 +10,13 @@ export class HttpService {
     }
 
     get(url: string, headers?: HttpHeaders) {
-        return this.http.get<IGenericResponse>(url, {
+        return this.http.get<IGenericResponse<any>>(url, {
             headers
         });
     }
 
     post(url: string, data: {[key: string]: any} = {}, headers?: {[key: string]: any}) {
-        return this.http.post<IGenericResponse>(url, data, {
+        return this.http.post<IGenericResponse<any>>(url, data, {
             headers: new HttpHeaders({
                 ...headers,
                 'Content-Type': 'application/json'

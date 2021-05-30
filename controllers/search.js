@@ -10,6 +10,7 @@ const {
 	isNonEmptyArray 
 } = require('../helpers/util');
 const Event = require('../plugins/event-handler');
+const SearchHelper = require('../helpers/search');
 /**
  * 
  * @param {Object} config
@@ -35,12 +36,17 @@ module.exports = function(config) {
 		 * @type {import('../plugins/event-handler').ResponseData}
 		 */
 		const res = {
+			responseBody: {
+ 
+			}
 		};
 		try {
-			res.responseBody = await searchService.search({
+			const _results = await searchService.search({
 				query: ''
 			});
-			res.responseBody;
+			res.responseBody = SearchHelper.convertActualResponseToLogicalResponse(
+				_results
+			);
 		} catch(e) {
 			res.isError = true;
 			res.errorMessage = 'Failed to search';

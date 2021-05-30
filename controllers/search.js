@@ -30,7 +30,7 @@ module.exports = function(config) {
 	 * @param {IncomingMessage} req 
 	 */
 	const basicSearch = async req => {
-		logger.debug(`inside ${__filename} -> basicSearch`);
+		logger.debug('inside basicSearch');
 		/**
 		 * @type {import('../plugins/event-handler').ResponseData}
 		 */

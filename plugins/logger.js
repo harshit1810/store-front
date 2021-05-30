@@ -12,10 +12,12 @@ module.exports = function({
 		: 'dev') + '.log';
 	const path = PATH.join(__dirname, '..', 'logs', logFileName);
 
-	// remove existing log file
-	FS.rmSync(path, {
-		force: true
-	});
+	// create log files if not exists
+	try {
+		FS.writeFileSync(path, '');
+	} catch(e) {
+		// do nothing
+	}
 
 	const logger = BUNYAN.createLogger({
 		name: 'search-service',

@@ -19,9 +19,11 @@ jobs:
         uses: actions/setup-node@v1
       - name: Check nodejs version
         run: node -v
-      - name: Clean install dependencies and audit
+      - name: audit
         run: |
           npm ci
           npm audit
-      - name: linting
-        run: npm run-script lint
+      - name: test
+        run: |
+          npm ci
+          npm run-script test

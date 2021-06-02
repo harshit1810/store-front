@@ -1,5 +1,5 @@
 
-<nav class="navbar navbar-inverse navbar-static-top">
+<nav class="navbar navbar-inverse navbar-static-top top-bar">
     <div class="container">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -15,6 +15,12 @@
           <li class="active"><a href="#">Home</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#contact">Contact</a></li>
+          <li><div class="form-outline flex-fill"><input type="search" id="form1" class="form-control search-box" /></div></li>
+          <li>
+            <button type="button" class="search-button btn btn-primary ">
+              <i class="fa fa-search"></i>
+            </button>
+          </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li><a routerLink="/login/loginpage" style="border-right: 1px solid #9d9d9d;"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
@@ -23,4 +29,5 @@
       </div>
     </div>
   </nav>
+  <app-home></app-home>
 <router-outlet></router-outlet>

@@ -8,10 +8,12 @@ import { AppComponent } from './app.component';
 import { TopMenuComponent } from './top-menu/top-menu.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpService } from './common/services/http.service';
+import { HomeComponent } from './home/home.component';
 @NgModule({
   declarations: [
     AppComponent,
-    TopMenuComponent
+    TopMenuComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
